@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Editar postagem{% endblock %}
+
+{% block content %}
+<section class="cartao">
+    <h1>Editar postagem</h1>
+    <p class="postagem-data">
+        Publicada em {{ postagem['criado_em'].strftime('%d/%m/%Y %H:%M') }} (UTC)
+    </p>
+
+    <form method="post" class="form-postagem">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="conteudo">Conteúdo</label>
+        <textarea id="conteudo" name="conteudo" rows="5" maxlength="{{ conteudo_max }}"
+                  required>{{ conteudo }}</textarea>
+        <small>Até {{ conteudo_max }} caracteres.</small>
+        <div>
+            <button type="submit" class="botao">Salvar</button>
+            <a class="botao botao-secundario" href="{{ url_for('main.index') }}">Cancelar</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

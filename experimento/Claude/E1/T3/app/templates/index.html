@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Início{% endblock %}
+
+{% block content %}
+{% if g.user %}
+    <section class="cartao">
+        <h1>Olá, {{ g.user['username'] }}!</h1>
+        <p>Você está autenticado como <strong>{{ g.user['username'] }}</strong>.</p>
+
+        <form action="{{ url_for('posts.nova') }}" method="post" class="form-postagem">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label for="conteudo">Nova postagem</label>
+            <textarea id="conteudo" name="conteudo" rows="3" maxlength="{{ conteudo_max }}"
+                      placeholder="O que você está pensando?" required></textarea>
+            <small>Até {{ conteudo_max }} caracteres.</small>
+            <button type="submit" class="botao">Publicar</button>
+        </form>
+    </section>
+
+    <h2 class="titulo-feed">Postagens</h2>
+
+    {% for postagem in postagens %}
+        {% include "posts/_postagem.html" %}
+    {% else %}
+        <p class="vazio">Nenhuma postagem ainda. Seja o primeiro a publicar!</p>
+    {% endfor %}
+{% else %}
+    <section class="cartao">
+        <h1>Bem-vindo(a) à Rede Social</h1>
+        <p>Nenhum usuário autenticado no momento.</p>
+        <p>Entre ou crie uma conta para ver e publicar postagens.</p>
+        <p>
+            <a class="botao" href="{{ url_for('auth.login') }}">Entrar</a>
+            <a class="botao botao-secundario" href="{{ url_for('auth.cadastro') }}">Criar conta</a>
+        </p>
+    </section>
+{% endif %}
+{% endblock %}
