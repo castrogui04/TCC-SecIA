@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Início{% endblock %}
+
+{% block content %}
+  <section class="card">
+    {% if g.user %}
+      <h1>Página inicial</h1>
+      <p>Você está autenticado como <strong>{{ g.user['username'] }}</strong>.</p>
+      <p class="muted">Conta criada em {{ g.user['created_at'] }}.</p>
+      <form action="{{ url_for('auth.logout') }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit">Sair da conta</button>
+      </form>
+    {% else %}
+      <h1>Bem-vindo(a) à Rede Social</h1>
+      <p>Nenhum usuário autenticado.</p>
+      <p>
+        <a class="button" href="{{ url_for('auth.login') }}">Entrar</a>
+        <a class="button secondary" href="{{ url_for('auth.register') }}">Criar conta</a>
+      </p>
+    {% endif %}
+  </section>
+{% endblock %}
