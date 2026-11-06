@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Início{% endblock %}
+
+{% block content %}
+<section class="cartao">
+    {% if g.user %}
+        <h1>Olá, {{ g.user['username'] }}!</h1>
+        <p>Você está autenticado como <strong>{{ g.user['username'] }}</strong>.</p>
+        <p>Sua sessão permanece ativa enquanto você navega pelo site.</p>
+        <form action="{{ url_for('auth.logout') }}" method="post">
+            <button type="submit" class="botao botao-secundario">Sair</button>
+        </form>
+    {% else %}
+        <h1>Bem-vindo(a) à Rede Social</h1>
+        <p>Nenhum usuário autenticado no momento.</p>
+        <p>
+            <a class="botao" href="{{ url_for('auth.login') }}">Entrar</a>
+            <a class="botao botao-secundario" href="{{ url_for('auth.cadastro') }}">Criar conta</a>
+        </p>
+    {% endif %}
+</section>
+{% endblock %}

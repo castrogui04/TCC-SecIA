@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Entrar{% endblock %}
+
+{% block content %}
+<section class="cartao">
+    <h1>Entrar</h1>
+    <form method="post">
+        <label for="username">Nome de usuário</label>
+        <input type="text" id="username" name="username" value="{{ username }}"
+               required autofocus autocomplete="username">
+
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" name="senha" required autocomplete="current-password">
+
+        <label class="checkbox">
+            <input type="checkbox" name="lembrar"> Manter conectado por 7 dias
+        </label>
+
+        <button type="submit" class="botao">Entrar</button>
+    </form>
+    <p>Ainda não tem conta? <a href="{{ url_for('auth.cadastro') }}">Cadastre-se</a>.</p>
+</section>
+{% endblock %}

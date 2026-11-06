@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Cadastro{% endblock %}
+
+{% block content %}
+<section class="cartao">
+    <h1>Criar conta</h1>
+    <form method="post">
+        <label for="username">Nome de usuário</label>
+        <input type="text" id="username" name="username" value="{{ username }}"
+               required autofocus minlength="3" maxlength="30"
+               pattern="[A-Za-z0-9_.\-]{3,30}" autocomplete="username">
+        <small>3 a 30 caracteres: letras, números, ".", "_" ou "-".</small>
+
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" name="senha" required minlength="6"
+               autocomplete="new-password">
+
+        <label for="confirmacao">Confirmar senha</label>
+        <input type="password" id="confirmacao" name="confirmacao" required minlength="6"
+               autocomplete="new-password">
+
+        <button type="submit" class="botao">Cadastrar</button>
+    </form>
+    <p>Já tem conta? <a href="{{ url_for('auth.login') }}">Entrar</a>.</p>
+</section>
+{% endblock %}
