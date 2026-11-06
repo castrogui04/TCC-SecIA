@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Meu perfil{% endblock %}
+{% block content %}
+  <section class="card">
+    <h1>Meu perfil</h1>
+    <p class="author">
+      <img class="avatar avatar-xl" src="{{ avatar_url(g.user['avatar_filename']) }}" alt="Sua foto de perfil atual">
+      <span><strong>{{ g.user['username'] }}</strong><br>
+        <span class="muted">
+          {% if g.user['avatar_filename'] %}Esta é a sua foto de perfil atual.{% else %}Você ainda não definiu uma foto de perfil.{% endif %}
+        </span></span>
+    </p>
+
+    <h2>{% if g.user['avatar_filename'] %}Substituir foto de perfil{% else %}Enviar foto de perfil{% endif %}</h2>
+    <form method="post" action="{{ url_for('profile.upload_avatar') }}" enctype="multipart/form-data">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label for="avatar">Selecione uma imagem do seu computador</label>
+      <input id="avatar" name="avatar" type="file" accept="image/png,image/jpeg,image/gif,image/webp" required>
+      <small class="muted">PNG, JPEG, GIF ou WebP, até 2 MB.</small>
+      <button type="submit">Enviar</button>
+    </form>
+    <p><a href="{{ url_for('main.index') }}">Voltar à página inicial</a></p>
+  </section>
+{% endblock %}

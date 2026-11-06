@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Busca{% endblock %}
+{% block content %}
+  <section class="card">
+    <h1>Resultados da busca</h1>
+    {% if query %}
+      <p>Termo pesquisado: <strong>{{ query }}</strong></p>
+    {% else %}
+      <p class="muted">Digite um termo no campo de busca acima para procurar usuários e postagens.</p>
+    {% endif %}
+  </section>
+
+  {% if query %}
+    <section class="card" id="resultados-usuarios">
+      <h2>Usuários ({{ users|length }})</h2>
+      {% for u in users %}
+        <div class="result-user">
+          <img class="avatar avatar-md" src="{{ avatar_url(u['avatar_filename']) }}" alt="Foto de {{ u['username'] }}">
+          <strong>{{ u['username'] }}</strong>
+          <span class="muted">membro desde {{ u['created_at'] }} (UTC)</span>
+        </div>
+      {% else %}
+        <p class="muted">Nenhum usuário encontrado.</p>
+      {% endfor %}
+    </section>
+
+    <section id="resultados-postagens">
+      <h2 class="feed-title">Postagens ({{ posts|length }})</h2>
+      {% for post in posts %}
+        <article class="card post">
+          <header class="post-head">
+            <span class="author">
+              <img class="avatar avatar-md" src="{{ avatar_url(post['avatar_filename']) }}" alt="Foto de {{ post['username'] }}">
+              <strong>{{ post['username'] }}</strong>
+            </span>
+            <span class="muted">
+              {{ post['created_at'] }} (UTC){% if post['updated_at'] %} · editado em {{ post['updated_at'] }}{% endif %}
+            </span>
+          </header>
+          <p class="post-body">{{ post['content'] }}</p>
+          <p class="muted">
+            {{ post['comment_count'] }} comentário(s) ·
+            <a href="{{ url_for('main.index') }}#post-{{ post['id'] }}">Ver na página inicial</a>
+          </p>
+        </article>
+      {% else %}
+        <div class="card"><p class="muted">Nenhuma postagem encontrada.</p></div>
+      {% endfor %}
+      {% if users|length == max_results or posts|length == max_results %}
+        <p class="muted">Exibindo no máximo {{ max_results }} resultados por categoria.</p>
+      {% endif %}
+    </section>
+  {% endif %}
+{% endblock %}
