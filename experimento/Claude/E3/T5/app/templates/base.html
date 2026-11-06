@@ -1,0 +1,49 @@
+{% from "_avatar.html" import avatar %}<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Rede Social{% endblock %} · Rede Social</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('main.index') }}">Rede Social</a>
+    <form class="search-form" action="{{ url_for('search.search') }}" method="get" role="search">
+      <label class="visually-hidden" for="q">Buscar</label>
+      <input id="q" name="q" type="search" maxlength="100" placeholder="Buscar usuários e postagens"
+             value="{{ query if query is defined else '' }}">
+      <button type="submit">Buscar</button>
+    </form>
+    <nav>
+      {% if g.user %}
+        <a class="profile-link" href="{{ url_for('profile.show') }}">
+          {{ avatar(g.user['avatar_filename'], g.user['username'], 'sm') }}
+          <span>{{ g.user['username'] }}</span>
+        </a>
+        <form class="inline" action="{{ url_for('auth.logout') }}" method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="link-button">Sair</button>
+        </form>
+      {% else %}
+        <a href="{{ url_for('auth.login') }}">Entrar</a>
+        <a href="{{ url_for('auth.register') }}">Cadastrar</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flashes">
+          {% for category, message in messages %}
+            <li class="flash flash-{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

@@ -1,0 +1,48 @@
+{% from "_avatar.html" import avatar %}<article class="post" id="post-{{ post['id'] }}">
+  <header class="post-meta">
+    {{ avatar(post['author_avatar'], post['author'], 'md') }}
+    <div>
+      <strong class="post-author">{{ post['author'] }}</strong>
+      <span class="muted">
+        · {{ post['created_at'] }}{% if post['updated_at'] %} (editado em {{ post['updated_at'] }}){% endif %}
+      </span>
+    </div>
+  </header>
+  <p class="post-content">{{ post['content'] }}</p>
+  {% if g.user and g.user['id'] == post['user_id'] %}
+    <footer class="post-actions">
+      <a class="button small secondary" href="{{ url_for('posts.edit', post_id=post['id']) }}">Editar</a>
+      <a class="button small danger" href="{{ url_for('posts.delete', post_id=post['id']) }}">Excluir</a>
+    </footer>
+  {% endif %}
+
+  {% if comments_by_post is defined %}
+    {% set post_comments = comments_by_post.get(post['id'], []) %}
+    <section class="comments">
+      <h3>Comentários ({{ post_comments|length }})</h3>
+      {% for comment in post_comments %}
+        <div class="comment">
+          {{ avatar(comment['author_avatar'], comment['author'], 'sm') }}
+          <div class="comment-body">
+            <strong>{{ comment['author'] }}</strong>
+            <span class="muted">· {{ comment['created_at'] }}</span>
+            <p class="comment-content">{{ comment['content'] }}</p>
+          </div>
+        </div>
+      {% else %}
+        <p class="muted">Nenhum comentário ainda.</p>
+      {% endfor %}
+
+      {% if g.user %}
+        <form class="comment-form" method="post" action="{{ url_for('comments.create', post_id=post['id']) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <label class="visually-hidden" for="comment-{{ post['id'] }}">Comentar</label>
+          <textarea id="comment-{{ post['id'] }}" name="content" rows="2" maxlength="300" required placeholder="Escreva um comentário..."></textarea>
+          <button type="submit" class="small">Comentar</button>
+        </form>
+      {% else %}
+        <p class="muted"><a href="{{ url_for('auth.login') }}">Entre</a> para comentar.</p>
+      {% endif %}
+    </section>
+  {% endif %}
+</article>

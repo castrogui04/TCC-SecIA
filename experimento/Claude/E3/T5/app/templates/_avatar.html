@@ -1,0 +1,11 @@
+{# Macro: foto de perfil, ou um círculo com a inicial quando não há foto. #}
+{% macro avatar(filename, username, size="md") %}
+  {%- if filename -%}
+    <img class="avatar avatar-{{ size }}"
+         src="{{ url_for('profile.avatar_file', filename=filename) }}"
+         alt="Foto de perfil de {{ username }}">
+  {%- else -%}
+    <span class="avatar avatar-{{ size }} avatar-placeholder" role="img"
+          aria-label="{{ username }} ainda não tem foto de perfil">{{ username[:1]|upper }}</span>
+  {%- endif -%}
+{% endmacro %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% from "_avatar.html" import avatar %}
+
+{% block title %}Busca{% endblock %}
+
+{% block content %}
+  <section class="card">
+    <h1>Resultados da busca</h1>
+    {% if query %}
+      <p>Termo pesquisado: <strong>{{ query }}</strong></p>
+    {% else %}
+      <p class="muted">Digite um termo no campo de busca acima para procurar usuários e postagens.</p>
+    {% endif %}
+  </section>
+
+  {% if query %}
+    <section id="users-results">
+      <h2>Usuários ({{ users|length }})</h2>
+      {% for user in users %}
+        <div class="card user-result">
+          {{ avatar(user['avatar_filename'], user['username'], 'md') }}
+          <div>
+            <strong>{{ user['username'] }}</strong>
+            <span class="muted">
+              · {{ user['post_count'] }} postagem(ns) · desde {{ user['created_at'] }}
+            </span>
+          </div>
+        </div>
+      {% else %}
+        <p class="muted">Nenhum usuário encontrado.</p>
+      {% endfor %}
+    </section>
+
+    <section id="posts-results">
+      <h2>Postagens ({{ posts|length }})</h2>
+      {% for post in posts %}
+        <div class="card">{% include "_post.html" %}</div>
+      {% else %}
+        <p class="muted">Nenhuma postagem encontrada.</p>
+      {% endfor %}
+    </section>
+
+    {% if users|length >= limit or posts|length >= limit %}
+      <p class="muted">Exibindo no máximo {{ limit }} resultados por categoria. Refine o termo para ver menos.</p>
+    {% endif %}
+  {% endif %}
+{% endblock %}
