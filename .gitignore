@@ -1,0 +1,48 @@
+# Ambientes virtuais
+.venv-ferramentas/
+.venv/
+venv/
+env/
+.venv*/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+build/
+dist/
+
+# Bancos de dados locais
+*.db
+*.sqlite
+*.sqlite3
+
+# Variaveis de ambiente
+.env
+.env.*
+!.env.example
+
+# Chaves e credenciais (qualquer arquivo)
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa*
+id_dsa*
+id_ecdsa*
+id_ed25519*
+*.ppk
+*credentials*
+*credential*.json
+*secret*
+*token*
+*apikey*
+*api_key*
+*.kdbx
+.npmrc
+.netrc
+.git-credentials

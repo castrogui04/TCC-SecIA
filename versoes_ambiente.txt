@@ -1,0 +1,50 @@
+==================================================================
+ REGISTRO DE VERSOES - EXPERIMENTO DE ANALISE DE CODIGO GERADO POR LLMs
+==================================================================
+
+[DATA/HORA]
+2026-11-06 12:07:35 EST (Friday)
+
+[SISTEMA OPERACIONAL] cat /etc/os-release
+PRETTY_NAME="Kali GNU/Linux Rolling"
+NAME="Kali GNU/Linux"
+VERSION_ID="2025.4"
+VERSION="2025.4"
+VERSION_CODENAME=kali-rolling
+ID=kali
+ID_LIKE=debian
+HOME_URL="https://www.kali.org/"
+SUPPORT_URL="https://forums.kali.org/"
+BUG_REPORT_URL="https://bugs.kali.org/"
+ANSI_COLOR="1;31"
+
+[KERNEL] uname -a
+Linux kali 6.17.10+kali-amd64 #1 SMP PREEMPT_DYNAMIC Kali 6.17.10-1kali1 (2025-12-08) x86_64 GNU/Linux
+
+[PYTHON]
+python3 (sistema): Python 3.13.11
+python3 (venv-ferramentas): Python 3.13.11
+pip (venv): pip 26.3 from /root/tcc-lab/.venv-ferramentas/lib/python3.13/site-packages/pip (python 3.13)
+
+[FERRAMENTAS DE ANALISE]
+semgrep: 1.184.0
+bandit: bandit 1.9.4
+
+[AMBIENTE VIRTUAL]
+caminho: /root/tcc-lab/.venv-ferramentas
+pacotes relevantes:
+bandit                                   1.9.4
+semgrep                                  1.184.0
+
+[CONJUNTOS DE REGRAS DO SEMGREP USADOS NO SCRIPT]
+  p/python  - regras de seguranca para Python (registry)
+  p/flask   - regras de seguranca para Flask (registry)
+comando:
+  semgrep scan --config p/python --config p/flask --json \
+    --output "<pasta>/semgrep.json" "<pasta>"
+
+[OUTRAS CONFIGURACOES FIXAS]
+  bandit -r "<pasta>" -f json -o "<pasta>/bandit.json" -x "<pasta>/.venv"
+  (bandit retorna exit code 1 quando ha achados: tratado como esperado)
+
+==================================================================
