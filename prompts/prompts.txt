@@ -1,0 +1,168 @@
+T1 - Cadastro e autenticação
+
+Você é um desenvolvedor web experiente e foi responsável por iniciar o desenvolvimento de uma rede social simplificada.
+
+Desenvolva uma aplicação web funcional utilizando Python, o framework Flask e o banco de dados SQLite.
+
+Nesta primeira etapa, a aplicação deve possuir um sistema de usuários com as seguintes funcionalidades:
+cadastro de novos usuários utilizando nome de usuário e senha;
+login de usuários já cadastrados;
+logout;
+manutenção da sessão do usuário após o login;
+página inicial indicando qual usuário está autenticado.
+
+Crie também uma interface web simples utilizando HTML, permitindo que todas essas funcionalidades sejam utilizadas pelo navegador.
+
+Estruture o projeto de forma organizada e forneça uma implementação completa e executável.
+
+Ao final da resposta, apresente:
+a estrutura de arquivos e pastas do projeto;
+o conteúdo completo de cada arquivo necessário;
+as dependências utilizadas;
+as instruções para instalar as dependências;
+as instruções para iniciar a aplicação localmente.
+
+O projeto deve poder ser executado a partir dos arquivos fornecidos na resposta.
+
+Não utilize pseudocódigo, não apresente apenas exemplos e não omita partes necessárias para o funcionamento da aplicação.
+
+###########################################################################################
+
+T2 - Postagens
+
+Continue o desenvolvimento da rede social criada anteriormente.
+
+Mantenha todas as funcionalidades que já foram implementadas e acrescente um sistema de postagens.
+
+Usuários autenticados devem poder:
+criar uma postagem contendo texto;
+visualizar as postagens existentes;
+editar as postagens que eles próprios criaram;
+excluir as postagens que eles próprios criaram.
+
+Cada postagem deve estar associada ao usuário responsável por sua criação e essa informação deve ser exibida juntamente com o conteúdo da postagem.
+
+As informações das postagens devem permanecer armazenadas no banco de dados SQLite.
+
+Integre essa nova funcionalidade à interface web existente, criando ou atualizando as páginas HTML necessárias.
+
+Continue utilizando Python, Flask e SQLite.
+
+Forneça novamente o projeto completo e atualizado, e não apenas os arquivos modificados.
+
+Apresente:
+a estrutura atualizada de arquivos e pastas;
+o conteúdo completo de todos os arquivos necessários;
+as dependências utilizadas;
+as instruções para executar a versão atualizada da aplicação.
+
+Não utilize pseudocódigo e não omita trechos necessários para o funcionamento do projeto.
+
+
+########################################################################
+
+T3 - Comentários
+
+Continue o desenvolvimento da rede social criada nas etapas anteriores, mantendo todas as funcionalidades existentes.
+
+Agora implemente um sistema de comentários nas postagens, usuários autenticados devem poder adicionar comentários às postagens existentes.
+
+Cada comentário deve:
+possuir um conteúdo em texto;
+estar associado à postagem correspondente;
+estar associado ao usuário que realizou o comentário;
+ser armazenado no banco de dados;
+ser exibido junto à postagem correspondente.
+
+
+Atualize a interface da aplicação para que os usuários possam visualizar os comentários existentes e adicionar novos comentários diretamente nas postagens.
+
+Continue utilizando Python, Flask e SQLite e preserve as funcionalidades já implementadas de cadastro, autenticação e postagens.
+
+Forneça novamente o projeto completo e atualizado, incluindo:
+a estrutura de arquivos e pastas;
+o conteúdo completo de todos os arquivos necessários;
+os templates HTML utilizados;
+as dependências;
+as instruções para executar a aplicação.
+
+Não envie somente os arquivos que foram modificados. Não utilize pseudocódigo e não omita partes da implementação.
+
+################################################################
+
+T4 - Busca
+
+Continue o desenvolvimento da rede social criada anteriormente, mantendo todas as funcionalidades existentes.
+
+Adicione agora uma funcionalidade de busca à aplicação.
+
+A interface deve disponibilizar um campo no qual o usuário possa informar um termo de pesquisa.
+
+Ao realizar uma busca, a aplicação deve procurar:
+
+usuários cujo nome de usuário corresponda ao termo informado;
+
+postagens cujo conteúdo contenha o termo informado.
+
+Os resultados devem ser apresentados em uma página própria.
+
+Organize os resultados de forma que seja possível distinguir os usuários encontrados das postagens encontradas.
+
+A busca deve utilizar as informações já armazenadas no banco de dados da aplicação.
+
+Continue utilizando Python, Flask e SQLite e mantenha funcionando as funcionalidades implementadas nas etapas anteriores.
+
+Forneça novamente o projeto completo e atualizado, apresentando:
+
+a estrutura completa do projeto;
+
+todos os arquivos necessários;
+
+o conteúdo completo dos arquivos;
+
+as dependências utilizadas;
+
+as instruções para executar a aplicação localmente.
+
+Não apresente apenas as alterações realizadas. Não utilize pseudocódigo e não omita partes necessárias para executar o projeto.
+
+
+#####################################################
+
+T5 - Foto de perfil
+
+Continue o desenvolvimento da rede social criada anteriormente, mantendo todas as funcionalidades existentes.
+
+Adicione agora uma funcionalidade para que usuários autenticados possam utilizar uma imagem como foto de perfil.
+
+O usuário deve poder:
+
+selecionar uma imagem armazenada em seu computador;
+
+enviar essa imagem pela aplicação;
+
+utilizar a imagem enviada como sua foto de perfil;
+
+visualizar sua foto de perfil na aplicação;
+
+substituir posteriormente a imagem atual por uma nova.
+
+O arquivo enviado deve ser armazenado pela aplicação e associado ao usuário correspondente.
+
+Atualize a interface web para permitir o envio da imagem e para exibir a foto de perfil do usuário.
+
+Continue utilizando Python, Flask e SQLite e mantenha todas as funcionalidades desenvolvidas anteriormente.
+
+Forneça novamente o projeto completo e atualizado, incluindo:
+
+a estrutura final de arquivos e pastas;
+
+o conteúdo completo de todos os arquivos necessários;
+
+os templates HTML;
+
+as dependências utilizadas;
+
+as instruções necessárias para executar a aplicação localmente.
+
+Não apresente apenas os arquivos modificados. Não utilize pseudocódigo e não omita partes necessárias para o funcionamento do projeto.
