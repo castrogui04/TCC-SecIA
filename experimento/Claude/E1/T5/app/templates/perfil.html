@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Perfil{% endblock %}
+
+{% block content %}
+<section class="cartao">
+    <h1>Meu perfil</h1>
+
+    <div class="perfil-avatar-area">
+        <img class="avatar avatar-grande" src="{{ url_for('avatar.exibir', user_id=g.user['id']) }}"
+             alt="Foto de perfil de {{ g.user['username'] }}">
+
+        <form action="{{ url_for('avatar.enviar') }}" method="post" enctype="multipart/form-data"
+              class="form-avatar">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label for="foto">{{ 'Substituir foto' if tem_avatar else 'Enviar foto de perfil' }}</label>
+            <input type="file" id="foto" name="foto"
+                   accept="image/png, image/jpeg, image/gif, image/webp" required>
+            <small>PNG, JPG, GIF ou WEBP, até {{ tamanho_max_mb }}&nbsp;MB.</small>
+            <button type="submit" class="botao botao-pequeno">Enviar</button>
+        </form>
+    </div>
+
+    <p><strong>ID:</strong> {{ g.user['id'] }}</p>
+    <p><strong>Nome de usuário:</strong> {{ g.user['username'] }}</p>
+    <p><strong>Membro desde:</strong> {{ g.user['criado_em'].strftime('%d/%m/%Y %H:%M') }} (UTC)</p>
+    <p><strong>Postagens publicadas:</strong> {{ total_postagens }}</p>
+    <p><strong>Comentários feitos:</strong> {{ total_comentarios }}</p>
+    <a class="botao botao-secundario" href="{{ url_for('main.index') }}">Voltar</a>
+</section>
+{% endblock %}
