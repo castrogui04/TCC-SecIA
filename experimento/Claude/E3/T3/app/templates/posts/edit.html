@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Editar postagem{% endblock %}
+
+{% block content %}
+  <section class="card">
+    <h1>Editar postagem</h1>
+    <form method="post" action="{{ url_for('posts.edit', post_id=post['id']) }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label for="content">Conteúdo</label>
+      <textarea id="content" name="content" rows="5" maxlength="500" required autofocus>{{ content }}</textarea>
+      <small class="muted">Até 500 caracteres.</small>
+      <button type="submit">Salvar</button>
+      <a class="button secondary" href="{{ url_for('main.index') }}">Cancelar</a>
+    </form>
+  </section>
+{% endblock %}
