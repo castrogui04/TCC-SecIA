@@ -1,0 +1,21 @@
+<article class="card post">
+  <header class="post-header">
+    <strong class="post-author">{{ post['author'] }}</strong>
+    <span class="muted post-date">
+      {{ post['created_at'] }} UTC
+      {% if post['updated_at'] %}· editado em {{ post['updated_at'] }} UTC{% endif %}
+    </span>
+  </header>
+
+  <p class="post-content">{{ post['content'] }}</p>
+
+  {% if g.user and post['user_id'] == g.user['id'] %}
+    <footer class="post-actions">
+      <a class="button small secondary" href="{{ url_for('posts.edit', post_id=post['id']) }}">Editar</a>
+      <form class="inline" method="post" action="{{ url_for('posts.delete', post_id=post['id']) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="small danger">Excluir</button>
+      </form>
+    </footer>
+  {% endif %}
+</article>

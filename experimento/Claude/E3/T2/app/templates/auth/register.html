@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Cadastro{% endblock %}
+
+{% block content %}
+  <section class="card">
+    <h1>Criar conta</h1>
+    <form method="post" action="{{ url_for('auth.register') }}" autocomplete="on">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <label for="username">Nome de usuário</label>
+      <input id="username" name="username" type="text" value="{{ username }}"
+             required minlength="3" maxlength="30" pattern="[A-Za-z0-9_.\-]{3,30}"
+             autocomplete="username" autofocus>
+      <small class="muted">3 a 30 caracteres: letras, números, ponto, hífen ou sublinhado.</small>
+
+      <label for="password">Senha</label>
+      <input id="password" name="password" type="password"
+             required minlength="8" maxlength="128" autocomplete="new-password">
+      <small class="muted">Mínimo de 8 caracteres.</small>
+
+      <label for="confirm_password">Confirmar senha</label>
+      <input id="confirm_password" name="confirm_password" type="password"
+             required minlength="8" maxlength="128" autocomplete="new-password">
+
+      <button type="submit">Cadastrar</button>
+    </form>
+    <p>Já tem conta? <a href="{{ url_for('auth.login') }}">Entrar</a></p>
+  </section>
+{% endblock %}

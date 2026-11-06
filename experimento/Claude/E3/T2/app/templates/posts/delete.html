@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Excluir postagem{% endblock %}
+
+{% block content %}
+  <section class="card">
+    <h1>Excluir postagem?</h1>
+    <p>Esta ação não pode ser desfeita.</p>
+    {% include "_post.html" %}
+    <form method="post" action="{{ url_for('posts.delete', post_id=post['id']) }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit" class="danger">Excluir definitivamente</button>
+      <a class="button secondary" href="{{ url_for('main.index') }}">Cancelar</a>
+    </form>
+  </section>
+{% endblock %}
