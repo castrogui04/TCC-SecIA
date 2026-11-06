@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Entrar{% endblock %}
+{% block content %}
+  <section class="card">
+    <h1>Entrar</h1>
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label for="username">Nome de usuário</label>
+      <input id="username" name="username" type="text" value="{{ username }}"
+             required maxlength="30" autocomplete="username" autofocus>
+
+      <label for="password">Senha</label>
+      <input id="password" name="password" type="password"
+             required maxlength="128" autocomplete="current-password">
+
+      <label class="check"><input type="checkbox" name="remember"> Manter conectado</label>
+
+      <button type="submit">Entrar</button>
+    </form>
+    <p class="muted">Não tem conta? <a href="{{ url_for('auth.register') }}">Cadastre-se</a>.</p>
+  </section>
+{% endblock %}
