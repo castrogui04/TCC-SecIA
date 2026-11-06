@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Rede Social{% endblock %} · Rede Social</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="topo">
+        <a class="logo" href="{{ url_for('main.index') }}">Rede Social</a>
+        <nav>
+            {% if g.user %}
+                <form action="{{ url_for('busca.buscar') }}" method="get" class="form-busca" role="search">
+                    <label for="busca-q" class="visualmente-oculto">Buscar</label>
+                    <input type="search" id="busca-q" name="q" value="{{ termo_busca or '' }}"
+                           placeholder="Buscar usuários e postagens" maxlength="100">
+                    <button type="submit">Buscar</button>
+                </form>
+                <span class="usuario-atual">Logado como <strong>{{ g.user['username'] }}</strong></span>
+                <a href="{{ url_for('main.perfil') }}">Perfil</a>
+                <form action="{{ url_for('auth.logout') }}" method="post" class="form-inline">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="link-botao">Sair</button>
+                </form>
+            {% else %}
+                <a href="{{ url_for('auth.login') }}">Entrar</a>
+                <a href="{{ url_for('auth.cadastro') }}">Cadastrar</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="conteudo">
+        {% with mensagens = get_flashed_messages(with_categories=true) %}
+            {% for categoria, mensagem in mensagens %}
+                <div class="alerta alerta-{{ categoria }}">{{ mensagem }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

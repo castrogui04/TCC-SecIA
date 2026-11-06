@@ -1,0 +1,59 @@
+<article class="cartao postagem" id="post-{{ postagem['id'] }}">
+    <header class="postagem-cabecalho">
+        <strong class="postagem-autor">{{ postagem['autor'] }}</strong>
+        <span class="postagem-data">
+            {{ postagem['criado_em'].strftime('%d/%m/%Y %H:%M') }} (UTC)
+            {% if postagem['atualizado_em'] %} · editada{% endif %}
+        </span>
+    </header>
+
+    <p class="postagem-conteudo">{{ postagem['conteudo'] }}</p>
+
+    {% if g.user and g.user['id'] == postagem['autor_id'] %}
+        <footer class="postagem-acoes">
+            <a class="botao botao-pequeno botao-secundario"
+               href="{{ url_for('posts.editar', post_id=postagem['id']) }}">Editar</a>
+            <form action="{{ url_for('posts.excluir', post_id=postagem['id']) }}" method="post"
+                  class="form-inline-acao"
+                  onsubmit="return confirm('Excluir esta postagem?');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="botao botao-pequeno botao-perigo">Excluir</button>
+            </form>
+        </footer>
+    {% endif %}
+
+    {% set lista_comentarios = comentarios[postagem['id']] %}
+    <section class="comentarios">
+        <h3 class="comentarios-titulo">
+            Comentários ({{ lista_comentarios|length }})
+        </h3>
+
+        {% for comentario in lista_comentarios %}
+            <div class="comentario">
+                <div class="comentario-cabecalho">
+                    <strong>{{ comentario['autor'] }}</strong>
+                    <span class="postagem-data">
+                        {{ comentario['criado_em'].strftime('%d/%m/%Y %H:%M') }} (UTC)
+                    </span>
+                </div>
+                <p class="comentario-conteudo">{{ comentario['conteudo'] }}</p>
+            </div>
+        {% else %}
+            <p class="vazio-comentarios">Nenhum comentário ainda.</p>
+        {% endfor %}
+
+        {% if g.user %}
+            <form action="{{ url_for('comentarios.adicionar', post_id=postagem['id']) }}"
+                  method="post" class="form-comentario">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <label for="comentario-{{ postagem['id'] }}" class="visualmente-oculto">
+                    Escreva um comentário
+                </label>
+                <textarea id="comentario-{{ postagem['id'] }}" name="conteudo" rows="2"
+                          maxlength="{{ comentario_max }}"
+                          placeholder="Escreva um comentário..." required></textarea>
+                <button type="submit" class="botao botao-pequeno">Comentar</button>
+            </form>
+        {% endif %}
+    </section>
+</article>

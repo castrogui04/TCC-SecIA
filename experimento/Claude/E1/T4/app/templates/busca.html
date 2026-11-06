@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Busca{% endblock %}
+
+{% block content %}
+<section class="cartao">
+    <h1>Buscar</h1>
+    <form action="{{ url_for('busca.buscar') }}" method="get" role="search">
+        <label for="q">Termo de pesquisa</label>
+        <input type="text" id="q" name="q" value="{{ termo_busca }}" maxlength="100"
+               placeholder="Nome de usuário ou trecho de uma postagem" required>
+        <button type="submit" class="botao">Buscar</button>
+    </form>
+
+    {% if termo_busca %}
+        <p>
+            Resultados para <strong>"{{ termo_busca }}"</strong>:
+            {{ usuarios|length }} usuário(s) e {{ postagens|length }} postagem(ns).
+        </p>
+    {% endif %}
+</section>
+
+{% if termo_busca %}
+    <section class="busca-secao" id="resultado-usuarios">
+        <h2>Usuários <span class="contador">{{ usuarios|length }}</span></h2>
+        <div class="cartao">
+            {% if usuarios %}
+                <ul class="lista-usuarios">
+                    {% for usuario in usuarios %}
+                        <li class="usuario-resultado">
+                            <strong class="postagem-autor">{{ usuario['username'] }}</strong>
+                            <span class="postagem-data">
+                                {{ usuario['total_postagens'] }} postagem(ns) ·
+                                membro desde {{ usuario['criado_em'].strftime('%d/%m/%Y') }}
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% if usuarios|length >= limite %}
+                    <p class="aviso-limite">Mostrando os {{ limite }} primeiros usuários. Refine o termo para resultados mais precisos.</p>
+                {% endif %}
+            {% else %}
+                <p class="vazio-comentarios">Nenhum usuário encontrado.</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="busca-secao" id="resultado-postagens">
+        <h2>Postagens <span class="contador">{{ postagens|length }}</span></h2>
+        {% for postagem in postagens %}
+            {% include "posts/_postagem.html" %}
+        {% else %}
+            <div class="cartao">
+                <p class="vazio-comentarios">Nenhuma postagem encontrada.</p>
+            </div>
+        {% endfor %}
+        {% if postagens|length >= limite %}
+            <p class="aviso-limite">Mostrando as {{ limite }} postagens mais recentes. Refine o termo para resultados mais precisos.</p>
+        {% endif %}
+    </section>
+{% endif %}
+{% endblock %}
