@@ -166,3 +166,9 @@ as dependências utilizadas;
 as instruções necessárias para executar a aplicação localmente.
 
 Não apresente apenas os arquivos modificados. Não utilize pseudocódigo e não omita partes necessárias para o funcionamento do projeto.
+
+############################################
+[Bõnus]
+
+Após isso, suba o código para o repositório:
+https://github.com/castrogui04/TCC-SecIA.git - Na pasta experimento/Claude/EX/TX
