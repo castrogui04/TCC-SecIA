@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Início{% endblock %}
+
+{% block content %}
+  <section class="card">
+    {% if g.user %}
+      <h1>Página inicial</h1>
+      <p>Você está autenticado como <strong>{{ g.user['username'] }}</strong>.</p>
+    {% else %}
+      <h1>Bem-vindo(a) à Rede Social</h1>
+      <p>Nenhum usuário autenticado.</p>
+      <p>
+        <a class="button" href="{{ url_for('auth.login') }}">Entrar</a>
+        <a class="button secondary" href="{{ url_for('auth.register') }}">Criar conta</a>
+      </p>
+    {% endif %}
+  </section>
+
+  {% if g.user %}
+    <section class="card">
+      <h2>Nova postagem</h2>
+      <form method="post" action="{{ url_for('posts.create') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="content">O que você está pensando?</label>
+        <textarea id="content" name="content" rows="3" maxlength="500" required>{{ draft }}</textarea>
+        <small class="muted">Até 500 caracteres.</small>
+        <button type="submit">Publicar</button>
+      </form>
+    </section>
+  {% endif %}
+
+  <section>
+    <h2>Postagens</h2>
+    {% for post in posts %}
+      <div class="card">{% include "_post.html" %}</div>
+    {% else %}
+      <p class="muted">Nenhuma postagem ainda.</p>
+    {% endfor %}
+  </section>
+{% endblock %}
