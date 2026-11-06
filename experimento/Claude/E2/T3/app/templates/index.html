@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Início{% endblock %}
+{% block content %}
+  <section class="card">
+    <h1>Página inicial</h1>
+    <p>Você está autenticado como <strong>{{ g.user['username'] }}</strong>.</p>
+  </section>
+
+  <section class="card">
+    <h2>Nova postagem</h2>
+    <form method="post" action="{{ url_for('posts.create') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label for="content">O que você está pensando?</label>
+      <textarea id="content" name="content" rows="3" maxlength="1000" required></textarea>
+      <button type="submit">Publicar</button>
+    </form>
+  </section>
+
+  <h2 class="feed-title">Postagens</h2>
+  {% for post in posts %}
+    <article class="card post" id="post-{{ post['id'] }}">
+      <header class="post-head">
+        <strong>{{ post['username'] }}</strong>
+        <span class="muted">
+          {{ post['created_at'] }} (UTC){% if post['updated_at'] %} · editado em {{ post['updated_at'] }}{% endif %}
+        </span>
+      </header>
+      <p class="post-body">{{ post['content'] }}</p>
+      {% if post['user_id'] == g.user['id'] %}
+        <div class="post-actions">
+          <a class="btn-link" href="{{ url_for('posts.edit', post_id=post['id']) }}">Editar</a>
+          <form method="post" action="{{ url_for('posts.delete', post_id=post['id']) }}" class="inline"
+                data-confirm="Excluir esta postagem?">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="danger">Excluir</button>
+          </form>
+        </div>
+      {% endif %}
+
+      <section class="comments">
+        {% set comments = comments_by_post.get(post['id'], []) %}
+        <h3>Comentários ({{ comments|length }})</h3>
+        {% for c in comments %}
+          <div class="comment">
+            <strong>{{ c['username'] }}</strong>
+            <span class="muted">{{ c['created_at'] }} (UTC)</span>
+            <p class="comment-body">{{ c['content'] }}</p>
+          </div>
+        {% else %}
+          <p class="muted">Nenhum comentário ainda.</p>
+        {% endfor %}
+        <form method="post" action="{{ url_for('comments.create', post_id=post['id']) }}" class="comment-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <label for="comment-{{ post['id'] }}" class="sr-only">Comentar</label>
+          <textarea id="comment-{{ post['id'] }}" name="content" rows="2" maxlength="500"
+                    placeholder="Escreva um comentário..." required></textarea>
+          <button type="submit">Comentar</button>
+        </form>
+      </section>
+    </article>
+  {% else %}
+    <p class="muted">Ainda não há postagens. Seja o primeiro a publicar!</p>
+  {% endfor %}
+{% endblock %}
