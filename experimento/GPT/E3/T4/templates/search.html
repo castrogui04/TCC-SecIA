@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Busca | Minha Rede{% endblock %}
+{% block content %}
+<h1>Resultados da busca</h1>
+{% if error %}
+<p class="message" role="status">{{ error }}</p>
+{% else %}
+<p>Termo pesquisado: <strong>{{ term }}</strong></p>
+<section class="card" aria-labelledby="users-heading">
+  <h2 id="users-heading">Usuários encontrados ({{ users|length }})</h2>
+  {% for user in users %}
+  <p>@{{ user['username'] }}</p>
+  {% else %}
+  <p>Nenhum usuário encontrado.</p>
+  {% endfor %}
+</section>
+<section aria-labelledby="posts-heading">
+  <h2 id="posts-heading">Postagens encontradas ({{ posts|length }})</h2>
+  {% for post in posts %}
+  <article class="card post">
+    <h3>@{{ post['username'] }}</h3>
+    <small>Publicado em {{ post['created_at'] }} (UTC)</small>
+    <p class="post-content">{{ post['content'] }}</p>
+    <a href="{{ url_for('index', _anchor='post-' ~ post['id']) }}">Ver postagem e comentários</a>
+  </article>
+  {% else %}
+  <p class="card">Nenhuma postagem encontrada.</p>
+  {% endfor %}
+</section>
+{% endif %}
+<p><a href="{{ url_for('index') }}">Voltar às postagens</a></p>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% set heading = 'Editar postagem' if editing else 'Nova postagem' %}
+{% block title %}{{ heading }} | Minha Rede{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>{{ heading }}</h1>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="content">Texto da postagem</label>
+    <textarea id="content" name="content" rows="8" required maxlength="5000"
+              aria-describedby="content-help">{{ content }}</textarea>
+    <small id="content-help">Escreva de 1 a 5000 caracteres. Apenas espaços não são aceitos.</small>
+    <button type="submit">{{ 'Salvar alterações' if editing else 'Publicar' }}</button>
+  </form>
+  <p><a href="{{ url_for('index') }}">Cancelar e voltar</a></p>
+</section>
+{% endblock %}
