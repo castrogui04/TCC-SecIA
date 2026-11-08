@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% set heading = 'Criar conta' if registering else 'Entrar' %}
+{% block title %}{{ heading }} | Minha Rede{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>{{ heading }}</h1>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="username">Nome de usuário</label>
+    <input id="username" name="username" required maxlength="30"
+           autocomplete="username" value="{{ request.form.get('username', '') }}"
+           {% if registering %}minlength="3" pattern="[A-Za-z0-9_]{3,30}" aria-describedby="username-help"{% endif %}>
+    {% if registering %}
+    <small id="username-help">De 3 a 30 letras sem acentos, números ou sublinhado. Maiúsculas e minúsculas são equivalentes.</small>
+    {% endif %}
+    <label for="password">Senha</label>
+    <input id="password" name="password" type="password" required maxlength="128"
+           autocomplete="{{ 'new-password' if registering else 'current-password' }}"
+           {% if registering %}minlength="8" aria-describedby="password-help"{% endif %}>
+    {% if registering %}<small id="password-help">De 8 a 128 caracteres.</small>{% endif %}
+    <button type="submit">{{ heading }}</button>
+  </form>
+  {% if registering %}
+  <p>Já possui uma conta? <a href="{{ url_for('login') }}">Entrar</a></p>
+  {% else %}
+  <p>Ainda não tem conta? <a href="{{ url_for('register') }}">Cadastre-se</a></p>
+  {% endif %}
+</section>
+{% endblock %}

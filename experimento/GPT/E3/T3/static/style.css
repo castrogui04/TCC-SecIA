@@ -1,0 +1,33 @@
+:root { font-family: system-ui, sans-serif; color: #1c2940; background: #f3f6fb; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1rem 5%; background: white; border-bottom: 1px solid #d6dfec; flex-wrap: wrap; }
+nav { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+nav form { margin: 0; }
+a { color: #244fbe; }
+.brand { font-size: 1.4rem; font-weight: 750; text-decoration: none; }
+main { max-width: 580px; margin: 3rem auto; padding: 0 1rem; }
+.card { padding: 2rem; border: 1px solid #d6dfec; border-radius: 16px; background: white; }
+h1 { margin-top: 0; }
+label { display: block; font-weight: 600; margin: 1.1rem 0 .4rem; }
+input, textarea { width: 100%; padding: .8rem; border: 1px solid #8b9ab2; border-radius: 7px; font: inherit; }
+textarea { resize: vertical; }
+small { display: block; margin-top: .4rem; color: #495870; }
+button { padding: .75rem 1.1rem; background: #244fbe; color: white; border: 0; border-radius: 7px; font: inherit; cursor: pointer; }
+.card button { width: 100%; margin-top: 1.4rem; }
+button:hover { background: #183b96; }
+:focus-visible { outline: 3px solid #b35b00; outline-offset: 3px; }
+.message { padding: 1rem; background: #e5edff; border-left: 4px solid #244fbe; border-radius: 6px; }
+@media (max-width: 420px) { .card { padding: 1.25rem; } main { margin-top: 1.5rem; } }
+.post { margin-top: 1rem; }
+.post h3 { margin: 0 0 .4rem; }
+.post-content { white-space: pre-wrap; overflow-wrap: anywhere; }
+.actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.actions button { width: auto; margin: 0; }
+.danger { background: #a52626; }
+.danger:hover { background: #7c1c1c; }
+.button { display: inline-block; padding: .75rem 1.1rem; background: #244fbe; color: white; border-radius: 7px; text-decoration: none; }
+.comments { border-top: 1px solid #d6dfec; margin-top: 1.5rem; padding-top: .5rem; }
+.comment { margin: .8rem 0; padding: .8rem; background: #f3f6fb; border-radius: 7px; }
+.comment p { margin-bottom: 0; }
+.post { scroll-margin-top: 1rem; }

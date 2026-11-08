@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="card">
+  {% if g.user %}
+  <h1>Olá, {{ g.user['username'] }}!</h1>
+  <p>Você está autenticado como <strong>{{ g.user['username'] }}</strong>.</p>
+  <p>Sua sessão permanece ativa por até 7 dias de inatividade. Use Sair para encerrá-la.</p>
+  {% else %}
+  <h1>Bem-vindo à Minha Rede</h1>
+  <p>Nenhum usuário está autenticado.</p>
+  <p><a href="{{ url_for('register') }}">Crie sua conta</a> ou
+     <a href="{{ url_for('login') }}">entre para continuar</a>.</p>
+  {% endif %}
+</section>
+{% if g.user %}
+<section aria-labelledby="feed-heading">
+  <h2 id="feed-heading">Postagens da comunidade</h2>
+  <p><a class="button" href="{{ url_for('create_post') }}">Criar postagem</a></p>
+  {% for post in posts %}
+  <article class="card post" id="post-{{ post['id'] }}">
+    <h3>@{{ post['username'] }}</h3>
+    <small>Publicado em {{ post['created_at'] }} (UTC)</small>
+    <p class="post-content">{{ post['content'] }}</p>
+    {% if post['author_id'] == g.user['id'] %}
+    <div class="actions">
+      <a href="{{ url_for('edit_post', post_id=post['id']) }}">Editar</a>
+      <form action="{{ url_for('delete_post', post_id=post['id']) }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="danger" type="submit">Excluir postagem</button>
+      </form>
+    </div>
+    {% endif %}
+    <section class="comments" aria-labelledby="comments-heading-{{ post['id'] }}">
+      <h4 id="comments-heading-{{ post['id'] }}">Comentários</h4>
+      {% for comment in comments.get(post['id'], []) %}
+      <article class="comment">
+        <strong>@{{ comment['username'] }}</strong>
+        <small>{{ comment['created_at'] }} (UTC)</small>
+        <p class="post-content">{{ comment['content'] }}</p>
+      </article>
+      {% else %}
+      <p>Ainda não há comentários.</p>
+      {% endfor %}
+      <form action="{{ url_for('add_comment', post_id=post['id']) }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="comment-{{ post['id'] }}">Adicionar comentário</label>
+        <textarea id="comment-{{ post['id'] }}" name="content" rows="3" required
+                  maxlength="2000" aria-describedby="comment-help-{{ post['id'] }}"></textarea>
+        <small id="comment-help-{{ post['id'] }}">De 1 a 2000 caracteres. Apenas espaços não são aceitos.</small>
+        <button type="submit">Comentar</button>
+      </form>
+    </section>
+  </article>
+  {% else %}
+  <p class="card">Ainda não há postagens. Publique a primeira!</p>
+  {% endfor %}
+</section>
+{% endif %}
+{% endblock %}
