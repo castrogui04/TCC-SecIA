@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Minha Rede{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header><a href="{{ url_for('index') }}">Minha Rede</a></header>
+  <main>
+    {% if g.user %}
+      <div class="profile-summary">
+        {% if g.user['profile_photo'] %}
+          <img class="avatar" src="{{ url_for('profile_photo', user_id=g.user['id']) }}"
+               alt="Foto de perfil de {{ g.user['username'] }}" width="64" height="64">
+        {% endif %}
+        <a href="{{ url_for('profile') }}">Meu perfil · {{ g.user['username'] }}</a>
+      </div>
+      <form class="search-form" method="get" action="{{ url_for('search') }}" role="search">
+        <label for="search-term">Buscar usuários e postagens</label>
+        <input id="search-term" type="search" name="q" maxlength="100" required
+               value="{{ search_term|default('') }}" placeholder="Digite um termo">
+        <button type="submit">Buscar</button>
+      </form>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

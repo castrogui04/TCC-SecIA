@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Meu perfil | Minha Rede{% endblock %}
+{% block content %}
+  <h1>Meu perfil</h1>
+  <p>Usuário: <strong>{{ g.user['username'] }}</strong></p>
+  {% if g.user['profile_photo'] %}
+    <img class="profile-photo" src="{{ url_for('profile_photo', user_id=g.user['id']) }}"
+         alt="Sua foto de perfil atual" width="256" height="256">
+  {% else %}
+    <p>Você ainda não enviou uma foto de perfil.</p>
+  {% endif %}
+  {% if request.args.get('updated') == '1' %}
+    <p role="status">Foto de perfil atualizada.</p>
+  {% endif %}
+  {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+  <form method="post" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="photo">Selecionar nova foto de perfil</label>
+    <input id="photo" type="file" name="photo" accept="image/jpeg,image/png,image/webp"
+           required aria-describedby="photo-help">
+    <small id="photo-help">JPEG, PNG ou WebP de até 5 MiB, 16 megapixels e 8192 pixels por lado.
+      A foto é salva em PNG, com até 256 × 256 pixels. Em imagens animadas, usa-se o primeiro quadro.</small>
+    <button type="submit">{{ 'Substituir foto' if g.user['profile_photo'] else 'Enviar foto' }}</button>
+  </form>
+  <p><a href="{{ url_for('index') }}">Voltar para o início</a></p>
+{% endblock %}

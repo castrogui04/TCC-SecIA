@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Criar conta' if registering else 'Entrar' }} | Minha Rede{% endblock %}
+{% block content %}
+  <h1>{{ 'Criar conta' if registering else 'Entrar' }}</h1>
+  {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+  {% if not registering and request.args.get('registered') == '1' %}
+    <p role="status">Cadastro concluído. Entre com seu usuário e senha.</p>
+  {% endif %}
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="username">Nome de usuário</label>
+    <input id="username" name="username" value="{{ username }}" required
+           minlength="3" maxlength="30" pattern="[A-Za-z0-9_]{3,30}" autocomplete="username"
+           aria-describedby="username-help">
+    <small id="username-help">De 3 a 30 letras sem acentos, números ou sublinhado.</small>
+    <label for="password">Senha</label>
+    <input id="password" type="password" name="password" required minlength="8" maxlength="128"
+           autocomplete="{{ 'new-password' if registering else 'current-password' }}"
+           aria-describedby="password-help">
+    <small id="password-help">De 8 a 128 caracteres.</small>
+    <button type="submit">{{ 'Cadastrar' if registering else 'Entrar' }}</button>
+  </form>
+  <p><a href="{{ url_for('login') if registering else url_for('register') }}">{{ 'Já tenho conta' if registering else 'Criar uma conta' }}</a></p>
+{% endblock %}
