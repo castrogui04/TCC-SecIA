@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Postagem</title>
+</head>
+<body>
+  <main>
+    <h1>{{ 'Editar postagem' if post else 'Nova postagem' }}</h1>
+    <p>Informe um texto de 1 a 5.000 caracteres.</p>
+    <form method="post" action="{{ url_for('edit_post', post_id=post['id']) if post else url_for('create_post') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <p><label for="content">Texto da postagem</label></p>
+      <textarea id="content" name="content" rows="8" maxlength="5000" required>{{ content }}</textarea>
+      <button type="submit">Salvar</button>
+    </form>
+    <p><a href="{{ url_for('index') }}">Voltar ao início</a></p>
+  </main>
+</body>
+</html>

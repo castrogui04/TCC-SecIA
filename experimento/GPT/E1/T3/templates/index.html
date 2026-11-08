@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rede social</title>
+</head>
+<body>
+  <main>
+    <h1>Rede social</h1>
+    <nav aria-label="Navegação principal">
+      <a href="{{ url_for('index') }}">Início</a>
+      {% if not session.get('user_id') %}
+        <a href="{{ url_for('register') }}">Cadastrar</a>
+        <a href="{{ url_for('login') }}">Entrar</a>
+      {% endif %}
+    </nav>
+
+    {% for message in get_flashed_messages() %}
+      <p role="status">{{ message }}</p>
+    {% endfor %}
+
+    {% if mode in ('register', 'login') %}
+      {% set registering = mode == 'register' %}
+      <h2>{{ 'Criar conta' if registering else 'Entrar' }}</h2>
+      <form method="post" action="{{ url_for(mode) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <p>
+          <label for="username">Nome de usuário</label>
+          <input id="username" name="username" value="{{ entered_name|default('') }}"
+                 autocomplete="username" maxlength="50" required>
+        </p>
+        <p>
+          <label for="password">Senha</label>
+          <input id="password" name="password" type="password" minlength="8" maxlength="128"
+                 autocomplete="{{ 'new-password' if registering else 'current-password' }}" required>
+        </p>
+        <button type="submit">{{ 'Cadastrar' if registering else 'Entrar' }}</button>
+      </form>
+    {% elif g.user %}
+      <p>Usuário autenticado: <strong>{{ g.user['username'] }}</strong></p>
+      <form method="post" action="{{ url_for('logout') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button type="submit">Sair</button>
+      </form>
+      <h2>Nova postagem</h2>
+      <form method="post" action="{{ url_for('create_post') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <p><label for="content">Texto da postagem (até 5.000 caracteres)</label></p>
+        <textarea id="content" name="content" rows="5" maxlength="5000" required></textarea>
+        <button type="submit">Publicar</button>
+      </form>
+      <h2>Postagens</h2>
+      {% for post in posts %}
+        <article>
+          <h3>{{ post['username'] }}</h3>
+          <p style="white-space: pre-wrap; overflow-wrap: anywhere">{{ post['content'] }}</p>
+          {% if post['user_id'] == g.user['id'] %}
+            <a href="{{ url_for('edit_post', post_id=post['id']) }}">Editar</a>
+            <form method="post" action="{{ url_for('delete_post', post_id=post['id']) }}">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <button type="submit">Excluir</button>
+            </form>
+          {% endif %}
+          <h4>Comentários</h4>
+          {% for comment in comments.get(post['id'], []) %}
+            <div>
+              <strong>{{ comment['username'] }}</strong>
+              <p style="white-space: pre-wrap; overflow-wrap: anywhere">{{ comment['content'] }}</p>
+            </div>
+          {% else %}
+            <p>Ainda não há comentários.</p>
+          {% endfor %}
+          <form method="post" action="{{ url_for('add_comment', post_id=post['id']) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <p><label for="comment-{{ post['id'] }}">Novo comentário (até 2.000 caracteres)</label></p>
+            <textarea id="comment-{{ post['id'] }}" name="content" rows="3" maxlength="2000" required></textarea>
+            <button type="submit">Comentar</button>
+          </form>
+        </article>
+      {% else %}
+        <p>Ainda não há postagens.</p>
+      {% endfor %}
+    {% else %}
+      <p>Crie uma conta ou entre para acessar sua sessão.</p>
+    {% endif %}
+  </main>
+</body>
+</html>
