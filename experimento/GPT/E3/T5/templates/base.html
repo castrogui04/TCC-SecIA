@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Minha Rede{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <a class="brand" href="{{ url_for('index') }}">Minha Rede</a>
+    <nav aria-label="Navegação principal">
+      {% if g.user %}
+      <span>@{{ g.user['username'] }}</span>
+      {% if g.user['profile_photo'] %}
+      <img class="avatar" src="{{ url_for('profile_photo', user_id=g.user['id']) }}"
+           alt="Foto de perfil de {{ g.user['username'] }}" width="48" height="48">
+      {% endif %}
+      <a href="{{ url_for('profile') }}">Meu perfil</a>
+      <a href="{{ url_for('index') }}">Postagens</a>
+      <a href="{{ url_for('create_post') }}">Nova postagem</a>
+      <form class="search-form" action="{{ url_for('search') }}" method="get" role="search">
+        <input type="search" name="q" required maxlength="100"
+               aria-label="Buscar usuários e postagens" placeholder="Buscar usuários e postagens"
+               value="{{ request.args.get('q', '') }}">
+        <button type="submit">Buscar</button>
+      </form>
+      <form action="{{ url_for('logout') }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit">Sair</button>
+      </form>
+      {% else %}
+      <a href="{{ url_for('login') }}">Entrar</a>
+      <a href="{{ url_for('register') }}">Criar conta</a>
+      {% endif %}
+    </nav>
+  </header>
+  <main>
+    {% for message in get_flashed_messages() %}
+    <p class="message" role="status">{{ message }}</p>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
