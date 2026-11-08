@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="card">
+  {% if g.user %}
+  <h1>Olá, {{ g.user['username'] }}!</h1>
+  <p>Você está autenticado como <strong>{{ g.user['username'] }}</strong>.</p>
+  <p>Sua sessão permanece ativa por até 7 dias de inatividade. Use Sair para encerrá-la.</p>
+  {% else %}
+  <h1>Bem-vindo à Minha Rede</h1>
+  <p>Nenhum usuário está autenticado.</p>
+  <p><a href="{{ url_for('register') }}">Crie sua conta</a> ou
+     <a href="{{ url_for('login') }}">entre para continuar</a>.</p>
+  {% endif %}
+</section>
+{% endblock %}
