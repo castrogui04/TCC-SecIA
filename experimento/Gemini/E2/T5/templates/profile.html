@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Meu Perfil - Rede Social{% endblock %}
+
+{% block content %}
+<div class="card profile-box">
+    <div class="profile-avatar-container">
+        {% if user['profile_pic'] %}
+            <img src="{{ url_for('static', filename='uploads/avatars/' + user['profile_pic']) }}" alt="Foto de {{ user['username'] }}" class="avatar avatar-profile">
+        {% else %}
+            <div class="avatar avatar-profile">{{ user['username'][:1]|upper }}</div>
+        {% endif %}
+    </div>
+
+    <div class="profile-info">
+        <h2 class="profile-username">{{ user['username'] }}</h2>
+        <p class="profile-date">Conta criada em: {{ user['created_at'][:10] }}</p>
+    </div>
+
+    <div class="profile-upload-form">
+        <h3 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Atualizar Foto de Perfil</h3>
+        <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 1rem;">
+            Selecione uma imagem do seu computador (PNG, JPG, JPEG, GIF ou WEBP). O envio substitui a imagem atual.
+        </p>
+
+        <form action="{{ url_for('profile') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group" style="text-align: left;">
+                <input type="file" id="profile_pic" name="profile_pic" accept="image/*" required>
+            </div>
+            <button type="submit" class="btn" style="width: 100%;">Salvar Foto de Perfil</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

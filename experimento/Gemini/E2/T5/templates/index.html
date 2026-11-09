@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Feed - Rede Social{% endblock %}
+
+{% block content %}
+    {% if user %}
+        <!-- Card de Boas-vindas e Criação de Postagem -->
+        <div class="card">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                {% if user['profile_pic'] %}
+                    <img src="{{ url_for('static', filename='uploads/avatars/' + user['profile_pic']) }}" alt="{{ user['username'] }}" class="avatar avatar-post">
+                {% else %}
+                    <div class="avatar avatar-post">{{ user['username'][:1]|upper }}</div>
+                {% endif %}
+                <h2 style="margin-bottom: 0;">Compartilhe algo, {{ user['username'] }}!</h2>
+            </div>
+
+            <form action="{{ url_for('create_post') }}" method="POST">
+                <div class="form-group">
+                    <label for="content">No que você está pensando?</label>
+                    <textarea id="content" name="content" placeholder="Escreva sua publicação aqui..." rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn">Publicar</button>
+            </form>
+        </div>
+    {% else %}
+        <!-- Banner para Visitantes não Autenticados -->
+        <div class="card" style="text-align: center;">
+            <h2>Bem-vindo à Rede Social</h2>
+            <p style="margin-bottom: 1.25rem; color: #475569;">Crie sua conta ou faça login para publicar mensagens, fotos de perfil e interagir com a comunidade.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <a href="{{ url_for('login') }}" class="btn">Entrar</a>
+                <a href="{{ url_for('register') }}" class="btn btn-secondary">Cadastre-se</a>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Feed de Publicações -->
+    <div class="feed-header">
+        <h3>Publicações Recentes</h3>
+        <span style="font-size: 0.9rem; color: #64748b;">Total: {{ posts|length }}</span>
+    </div>
+
+    {% if posts %}
+        {% for post in posts %}
+            <div class="post-item">
+                <div class="post-header">
+                    <div class="post-author-wrapper">
+                        {% if post['profile_pic'] %}
+                            <img src="{{ url_for('static', filename='uploads/avatars/' + post['profile_pic']) }}" alt="{{ post['username'] }}" class="avatar avatar-post">
+                        {% else %}
+                            <div class="avatar avatar-post">{{ post['username'][:1]|upper }}</div>
+                        {% endif %}
+                        <div>
+                            <div class="post-author">{{ post['username'] }}</div>
+                            <span class="post-date">{{ post['created_at'] }}{% if post['updated_at'] != post['created_at'] %} (editado){% endif %}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="post-content">{{ post['content'] }}</div>
+
+                {% if session.get('user_id') == post['author_id'] %}
+                    <div class="post-actions">
+                        <a href="{{ url_for('edit_post', post_id=post['id']) }}" class="btn btn-secondary btn-sm">Editar</a>
+                        <form action="{{ url_for('delete_post', post_id=post['id']) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta postagem?');" style="display: inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                        </form>
+                    </div>
+                {% endif %}
+
+                <!-- Seção de Comentários Integrada -->
+                <div class="comments-section">
+                    <div class="comments-title">
+                        Comentários ({{ post['comments']|length }})
+                    </div>
+
+                    {% if post['comments'] %}
+                        <div class="comment-list">
+                            {% for comment in post['comments'] %}
+                                <div class="comment-item">
+                                    {% if comment['profile_pic'] %}
+                                        <img src="{{ url_for('static', filename='uploads/avatars/' + comment['profile_pic']) }}" alt="{{ comment['username'] }}" class="avatar avatar-comment">
+                                    {% else %}
+                                        <div class="avatar avatar-comment">{{ comment['username'][:1]|upper }}</div>
+                                    {% endif %}
+                                    <div class="comment-body">
+                                        <div class="comment-header">
+                                            <span class="comment-author">{{ comment['username'] }}</span>
+                                            <span class="comment-date">{{ comment['created_at'] }}</span>
+                                        </div>
+                                        <div class="comment-content">{{ comment['content'] }}</div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if session.get('user_id') %}
+                        <form action="{{ url_for('add_comment', post_id=post['id']) }}" method="POST" class="comment-form">
+                            <input type="text" name="content" placeholder="Escreva um comentário..." required autocomplete="off">
+                            <button type="submit" class="btn btn-sm">Comentar</button>
+                        </form>
+                    {% else %}
+                        <p class="comment-login-hint">
+                            <a href="{{ url_for('login') }}">Faça login</a> para comentar nesta postagem.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <p>Nenhuma publicação encontrada até o momento.</p>
+            {% if user %}
+                <p style="font-size: 0.9rem; margin-top: 0.5rem;">Seja o primeiro a publicar algo!</p>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

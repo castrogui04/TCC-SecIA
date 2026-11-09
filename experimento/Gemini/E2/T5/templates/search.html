@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Resultados de Busca para "{{ query }}" - Rede Social{% endblock %}
+
+{% block content %}
+<div class="search-header-box">
+    <h2>Resultados da Pesquisa</h2>
+    {% if query %}
+        <p style="color: #64748b;">Exibindo resultados para o termo: <strong>"{{ query }}"</strong></p>
+    {% else %}
+        <p style="color: #64748b;">Nenhum termo de pesquisa informado.</p>
+    {% endif %}
+</div>
+
+<!-- Seção: Usuários Encontrados -->
+<div class="search-section">
+    <h3 class="search-section-title">
+        Usuários Encontrados
+        <span class="badge-count">{{ users|length }}</span>
+    </h3>
+
+    {% if users %}
+        <div class="user-results-grid">
+            {% for u in users %}
+                <div class="user-card">
+                    {% if u['profile_pic'] %}
+                        <img src="{{ url_for('static', filename='uploads/avatars/' + u['profile_pic']) }}" alt="{{ u['username'] }}" class="avatar avatar-search">
+                    {% else %}
+                        <div class="avatar avatar-search">{{ u['username'][:1]|upper }}</div>
+                    {% endif %}
+                    <div class="user-card-info">
+                        <div class="user-name">{{ u['username'] }}</div>
+                        <div class="user-date">Membro desde {{ u['created_at'][:10] }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state" style="padding: 1.5rem;">
+            <p>Nenhum usuário correspondeu ao termo pesquisado.</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Seção: Postagens Encontradas -->
+<div class="search-section">
+    <h3 class="search-section-title">
+        Postagens Encontradas
+        <span class="badge-count">{{ posts|length }}</span>
+    </h3>
+
+    {% if posts %}
+        {% for post in posts %}
+            <div class="post-item">
+                <div class="post-header">
+                    <div class="post-author-wrapper">
+                        {% if post['profile_pic'] %}
+                            <img src="{{ url_for('static', filename='uploads/avatars/' + post['profile_pic']) }}" alt="{{ post['username'] }}" class="avatar avatar-post">
+                        {% else %}
+                            <div class="avatar avatar-post">{{ post['username'][:1]|upper }}</div>
+                        {% endif %}
+                        <div>
+                            <div class="post-author">{{ post['username'] }}</div>
+                            <span class="post-date">{{ post['created_at'] }}{% if post['updated_at'] != post['created_at'] %} (editado){% endif %}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="post-content">{{ post['content'] }}</div>
+
+                {% if session.get('user_id') == post['author_id'] %}
+                    <div class="post-actions">
+                        <a href="{{ url_for('edit_post', post_id=post['id']) }}" class="btn btn-secondary btn-sm">Editar</a>
+                        <form action="{{ url_for('delete_post', post_id=post['id']) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta postagem?');" style="display: inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                        </form>
+                    </div>
+                {% endif %}
+
+                <!-- Comentários da postagem encontrada -->
+                <div class="comments-section">
+                    <div class="comments-title">
+                        Comentários ({{ post['comments']|length }})
+                    </div>
+
+                    {% if post['comments'] %}
+                        <div class="comment-list">
+                            {% for comment in post['comments'] %}
+                                <div class="comment-item">
+                                    {% if comment['profile_pic'] %}
+                                        <img src="{{ url_for('static', filename='uploads/avatars/' + comment['profile_pic']) }}" alt="{{ comment['username'] }}" class="avatar avatar-comment">
+                                    {% else %}
+                                        <div class="avatar avatar-comment">{{ comment['username'][:1]|upper }}</div>
+                                    {% endif %}
+                                    <div class="comment-body">
+                                        <div class="comment-header">
+                                            <span class="comment-author">{{ comment['username'] }}</span>
+                                            <span class="comment-date">{{ comment['created_at'] }}</span>
+                                        </div>
+                                        <div class="comment-content">{{ comment['content'] }}</div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if session.get('user_id') %}
+                        <form action="{{ url_for('add_comment', post_id=post['id']) }}" method="POST" class="comment-form">
+                            <input type="text" name="content" placeholder="Escreva um comentário..." required autocomplete="off">
+                            <button type="submit" class="btn btn-sm">Comentar</button>
+                        </form>
+                    {% else %}
+                        <p class="comment-login-hint">
+                            <a href="{{ url_for('login') }}">Faça login</a> para comentar nesta postagem.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state" style="padding: 1.5rem;">
+            <p>Nenhuma publicação contém o termo pesquisado.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
