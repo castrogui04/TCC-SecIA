@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Resultados da Busca - Rede Social{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h2 style="margin-top: 0; margin-bottom: 8px;">Resultados da Busca</h2>
+        <p style="color: #65676b; margin: 0;">Exibindo resultados para o termo: <strong>"{{ query }}"</strong></p>
+    </div>
+
+    <!-- Secao: Usuarios Encontrados -->
+    <div class="card">
+        <div class="section-badge">USUÁRIOS ENCONTRADOS ({{ users|length }})</div>
+        {% if users %}
+            <ul class="user-list">
+                {% for u in users %}
+                    <li class="user-item">
+                        <div class="user-avatar-placeholder">{{ u['username'][:1]|upper }}</div>
+                        <div>
+                            <strong>@{{ u['username'] }}</strong>
+                            <div style="font-size: 0.8rem; color: #65676b;">ID: {{ u['id'] }}</div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p style="color: #65676b; margin: 8px 0 0 0; font-size: 0.95rem;">Nenhum usuário encontrado correspondente a "{{ query }}".</p>
+        {% endif %}
+    </div>
+
+    <!-- Secao: Postagens Encontradas -->
+    <div class="search-results-section">
+        <div style="margin: 0 0 12px 4px;">
+            <span class="section-badge">POSTAGENS ENCONTRADAS ({{ posts|length }})</span>
+        </div>
+
+        {% if posts %}
+            {% for post in posts %}
+                <div class="card">
+                    <div class="post-header">
+                        <div>
+                            <div class="post-author">@{{ post['username'] }}</div>
+                            <div class="post-date">{{ post['created_at'] }}</div>
+                        </div>
+                    </div>
+                    <div class="post-content">{{ post['content'] }}</div>
+
+                    {% if session.get('user_id') == post['user_id'] %}
+                        <div class="post-actions">
+                            <a href="{{ url_for('edit_post', post_id=post['id']) }}" class="btn btn-secondary btn-sm">Editar</a>
+                            <form action="{{ url_for('delete_post', post_id=post['id']) }}" method="POST" style="margin: 0;" onsubmit="return confirm('Tem certeza que deseja excluir esta publicação?');">
+                                <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                            </form>
+                        </div>
+                    {% endif %}
+
+                    <!-- Comentarios na Postagem -->
+                    <div class="comments-section">
+                        <div class="comments-title">Comentários ({{ post['comments']|length }})</div>
+                        
+                        {% if post['comments'] %}
+                            <div class="comment-list">
+                                {% for comment in post['comments'] %}
+                                    <div class="comment-item">
+                                        <div class="comment-header">
+                                            <span class="comment-author">@{{ comment['username'] }}</span>
+                                            <span class="comment-date">{{ comment['created_at'] }}</span>
+                                        </div>
+                                        <div class="comment-content">{{ comment['content'] }}</div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        {% if session.get('user_id') %}
+                            <form action="{{ url_for('add_comment', post_id=post['id']) }}" method="POST" class="comment-form">
+                                <input type="text" name="content" placeholder="Escreva um comentário..." required autocomplete="off">
+                                <button type="submit" class="btn btn-sm">Comentar</button>
+                            </form>
+                        {% else %}
+                            <p style="font-size: 0.85rem; color: #65676b; margin: 6px 0 0 0;">
+                                <a href="{{ url_for('login') }}" style="color: #1877f2; text-decoration: none;">Faça login</a> para comentar.
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="card" style="text-align: center; color: #65676b; padding: 28px 20px;">
+                <p style="margin: 0;">Nenhuma publicação encontrada correspondente a "{{ query }}".</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
