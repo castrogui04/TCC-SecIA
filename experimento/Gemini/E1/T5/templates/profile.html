@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Meu Perfil - Rede Social{% endblock %}
+
+{% block content %}
+    <div class="card" style="text-align: center; padding: 32px 20px;">
+        <div style="margin-bottom: 16px; display: flex; justify-content: center;">
+            {% if user['profile_pic'] %}
+                <img src="{{ url_for('static', filename='uploads/' + user['profile_pic']) }}" alt="Foto de Perfil" class="avatar-lg">
+            {% else %}
+                <div class="avatar-placeholder-lg">{{ user['username'][:1]|upper }}</div>
+            {% endif %}
+        </div>
+
+        <h2 style="margin: 0 0 6px 0;">@{{ user['username'] }}</h2>
+        <p style="color: #65676b; margin: 0 0 24px 0; font-size: 0.95rem;">Gerencie sua imagem de perfil pública</p>
+
+        <form action="{{ url_for('profile') }}" method="POST" enctype="multipart/form-data" style="max-width: 380px; margin: 0 auto; text-align: left;">
+            <div>
+                <label for="profile_pic">Selecionar nova foto (PNG, JPG, JPEG, GIF, WEBP)</label>
+                <input type="file" id="profile_pic" name="profile_pic" accept="image/*" required>
+            </div>
+            <button type="submit" class="btn btn-full">
+                {% if user['profile_pic'] %}Substituir Imagem Atual{% else %}Salvar Imagem de Perfil{% endif %}
+            </button>
+        </form>
+    </div>
+{% endblock %}
