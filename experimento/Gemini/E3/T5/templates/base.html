@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Rede Social{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="{{ url_for('index') }}" class="brand">RedeSocial</a>
+            <form action="{{ url_for('search') }}" method="GET" class="nav-search-form">
+                <input type="text" name="q" class="nav-search-input" placeholder="Pesquisar usuários ou posts..." value="{{ request.args.get('q', '') }}" required>
+                <button type="submit" class="nav-search-btn">Buscar</button>
+            </form>
+        </div>
+        <div class="nav-links">
+            {% if session.get('user_id') %}
+                <a href="{{ url_for('profile') }}" class="nav-user-profile" title="Meu Perfil">
+                    <img src="{{ url_for('static', filename='uploads/' + session.get('avatar', 'default_avatar.svg')) }}" alt="Foto de perfil" class="nav-avatar">
+                    <span class="nav-username">{{ session.get('username') }}</span>
+                </a>
+                <a href="{{ url_for('profile') }}" class="btn-nav">Perfil</a>
+                <a href="{{ url_for('logout') }}" class="btn-nav">Sair</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="btn-nav">Entrar</a>
+                <a href="{{ url_for('register') }}" class="btn-nav">Cadastrar</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
