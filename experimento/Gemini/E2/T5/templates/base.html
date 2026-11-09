@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Rede Social{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('index') }}" class="logo">RedeSocial</a>
+
+        <!-- Campo de Pesquisa Global -->
+        <div class="nav-search">
+            <form action="{{ url_for('search') }}" method="GET">
+                <input type="search" name="q" placeholder="Buscar usuários ou postagens..." value="{{ request.args.get('q', '') }}" required>
+                <button type="submit">Buscar</button>
+            </form>
+        </div>
+
+        <ul>
+            {% if session.get('user_id') %}
+                <li class="nav-user-item">
+                    {% if current_user and current_user['profile_pic'] %}
+                        <img src="{{ url_for('static', filename='uploads/avatars/' + current_user['profile_pic']) }}" alt="{{ current_user['username'] }}" class="avatar avatar-nav">
+                    {% else %}
+                        <div class="avatar avatar-nav">{{ session.get('username')[:1]|upper }}</div>
+                    {% endif %}
+                    <a href="{{ url_for('profile') }}" style="font-weight: 600;">{{ session.get('username') }}</a>
+                </li>
+                <li><a href="{{ url_for('profile') }}">Meu Perfil</a></li>
+                <li><a href="{{ url_for('logout') }}">Sair</a></li>
+            {% else %}
+                <li><a href="{{ url_for('login') }}">Entrar</a></li>
+                <li><a href="{{ url_for('register') }}">Cadastrar</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
