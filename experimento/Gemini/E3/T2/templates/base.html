@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Rede Social{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="brand">RedeSocial</a>
+        <div class="nav-links">
+            {% if session.get('user_id') %}
+                <span class="user-badge">Olá, <strong>{{ session.get('username') }}</strong></span>
+                <a href="{{ url_for('logout') }}" class="btn-nav">Sair</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="btn-nav">Entrar</a>
+                <a href="{{ url_for('register') }}" class="btn-nav">Cadastrar</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
