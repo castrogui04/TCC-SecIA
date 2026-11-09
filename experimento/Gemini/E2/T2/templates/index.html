@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Feed - Rede Social{% endblock %}
+
+{% block content %}
+    {% if user %}
+        <!-- Card de Boas-vindas e Criação de Postagem -->
+        <div class="card">
+            <h2>Compartilhe algo, {{ user['username'] }}!</h2>
+            <form action="{{ url_for('create_post') }}" method="POST">
+                <div class="form-group">
+                    <label for="content">No que você está pensando?</label>
+                    <textarea id="content" name="content" placeholder="Escreva sua publicação aqui..." rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn">Publicar</button>
+            </form>
+        </div>
+    {% else %}
+        <!-- Banner para Visitantes não Autenticados -->
+        <div class="card" style="text-align: center;">
+            <h2>Bem-vindo à Rede Social</h2>
+            <p style="margin-bottom: 1.25rem; color: #475569;">Crie sua conta ou faça login para compartilhar mensagens e interagir com a comunidade.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <a href="{{ url_for('login') }}" class="btn">Entrar</a>
+                <a href="{{ url_for('register') }}" class="btn btn-secondary">Cadastre-se</a>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Feed de Publicações -->
+    <div class="feed-header">
+        <h3>Publicações Recentes</h3>
+        <span style="font-size: 0.9rem; color: #64748b;">Total: {{ posts|length }}</span>
+    </div>
+
+    {% if posts %}
+        {% for post in posts %}
+            <div class="post-item">
+                <div class="post-header">
+                    <div>
+                        <span class="post-author">{{ post['username'] }}</span>
+                        <span class="post-date">{{ post['created_at'] }}{% if post['updated_at'] != post['created_at'] %} (editado){% endif %}</span>
+                    </div>
+                </div>
+                <div class="post-content">{{ post['content'] }}</div>
+
+                {% if session.get('user_id') == post['author_id'] %}
+                    <div class="post-actions">
+                        <a href="{{ url_for('edit_post', post_id=post['id']) }}" class="btn btn-secondary btn-sm">Editar</a>
+                        <form action="{{ url_for('delete_post', post_id=post['id']) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta postagem?');" style="display: inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <p>Nenhuma publicação encontrada até o momento.</p>
+            {% if user %}
+                <p style="font-size: 0.9rem; margin-top: 0.5rem;">Seja o primeiro a publicar algo!</p>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
