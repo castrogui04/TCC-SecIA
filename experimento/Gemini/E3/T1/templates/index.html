@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Início - Rede Social{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Página Inicial</h2>
+    {% if user %}
+        <p>Você está conectado como <strong>{{ user['username'] }}</strong>.</p>
+        <p style="margin-top: 10px; color: #65676b;">Sua sessão está ativa e o identificador de usuário é #{{ user['id'] }}.</p>
+        <div class="actions">
+            <a href="{{ url_for('logout') }}" class="btn-secondary">Encerrar Sessão</a>
+        </div>
+    {% else %}
+        <p>Nenhum usuário autenticado no momento.</p>
+        <p style="margin-top: 10px; color: #65676b;">Faça login com sua conta ou cadastre-se para acessar o sistema.</p>
+        <div class="actions">
+            <a href="{{ url_for('login') }}" class="btn-primary">Entrar</a>
+            <a href="{{ url_for('register') }}" class="btn-secondary">Cadastrar-se</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
