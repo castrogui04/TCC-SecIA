@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Postagem - Rede Social{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h2 style="margin-top: 0; margin-bottom: 16px;">Editar Postagem</h2>
+        <form method="POST" action="{{ url_for('edit_post', post_id=post['id']) }}">
+            <div>
+                <label for="content">Conteúdo da Postagem</label>
+                <textarea id="content" name="content" required style="min-height: 120px;">{{ post['content'] }}</textarea>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn">Salvar Alterações</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
