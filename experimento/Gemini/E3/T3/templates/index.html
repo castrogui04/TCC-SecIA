@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Feed - Rede Social{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Painel do Usuário</h2>
+    {% if user %}
+        <p>Você está conectado como <strong>{{ user['username'] }}</strong> (ID: #{{ user['id'] }}).</p>
+    {% else %}
+        <p>Você está visualizando a rede social como visitante.</p>
+        <p style="margin-top: 8px; color: #65676b;">Para interagir, publicar e comentar, acesse ou crie sua conta.</p>
+        <div class="actions">
+            <a href="{{ url_for('login') }}" class="btn-primary">Entrar</a>
+            <a href="{{ url_for('register') }}" class="btn-secondary">Cadastrar-se</a>
+        </div>
+    {% endif %}
+</div>
+
+{% if user %}
+<div class="post-form-card clearfix">
+    <h3>Criar Nova Publicação</h3>
+    <form method="POST" action="{{ url_for('create_post') }}">
+        <div class="form-group">
+            <textarea name="content" placeholder="O que você está pensando agora?" required rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn-submit btn-publish">Publicar</button>
+    </form>
+</div>
+{% endif %}
+
+<h3 class="feed-title">Feed de Postagens</h3>
+
+{% if posts %}
+    {% for post in posts %}
+        <div class="post-card">
+            <div class="post-header">
+                <div class="post-meta">
+                    <span class="post-author">@{{ post['author_name'] }}</span>
+                    <span class="post-date">
+                        Publicado em {{ post['created_at'] }}
+                        {% if post['updated_at'] and post['updated_at'] != post['created_at'] %}
+                            <em>(editado)</em>
+                        {% endif %}
+                    </span>
+                </div>
+
+                {% if user and user['id'] == post['author_id'] %}
+                    <div class="post-controls">
+                        <a href="{{ url_for('edit_post', post_id=post['id']) }}" class="btn-link-action">Editar</a>
+                        <form method="POST" action="{{ url_for('delete_post', post_id=post['id']) }}" onsubmit="return confirm('Deseja realmente excluir esta postagem?');" style="display:inline;">
+                            <button type="submit" class="btn-link-danger">Excluir</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="post-content">{{ post['content'] }}</div>
+
+            <!-- Seção de Comentários -->
+            <div class="comments-section">
+                <div class="comments-title">
+                    Comentários ({{ post['comments']|length }})
+                </div>
+
+                {% if post['comments'] %}
+                    <div class="comments-list">
+                        {% for comment in post['comments'] %}
+                            <div class="comment-item">
+                                <div class="comment-header">
+                                    <span class="comment-author">@{{ comment['author_name'] }}</span>
+                                    <span class="comment-date">{{ comment['created_at'] }}</span>
+                                </div>
+                                <div class="comment-content">{{ comment['content'] }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="no-comments">Nenhum comentário nesta postagem ainda.</p>
+                {% endif %}
+
+                {% if user %}
+                    <form method="POST" action="{{ url_for('add_comment', post_id=post['id']) }}" class="comment-form">
+                        <textarea name="content" class="comment-input" placeholder="Escreva um comentário..." rows="1" required></textarea>
+                        <button type="submit" class="btn-comment">Comentar</button>
+                    </form>
+                {% else %}
+                    <p class="comment-login-hint">
+                        <a href="{{ url_for('login') }}">Faça login</a> para comentar nesta postagem.
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="empty-state">
+        <p>Nenhuma publicação encontrada no momento.</p>
+        {% if user %}
+            <p style="margin-top: 6px;">Seja o primeiro a compartilhar algo com a rede!</p>
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}

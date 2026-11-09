@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Cadastro - Rede Social{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 480px; margin: 0 auto;">
+    <h2>Criar Nova Conta</h2>
+    <form method="POST" action="{{ url_for('register') }}">
+        <div class="form-group">
+            <label for="username">Nome de Usuário</label>
+            <input type="text" id="username" name="username" required autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="password">Senha</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn-submit">Cadastrar</button>
+    </form>
+    <div class="auth-footer">
+        Já possui conta? <a href="{{ url_for('login') }}">Faça login aqui</a>
+    </div>
+</div>
+{% endblock %}
