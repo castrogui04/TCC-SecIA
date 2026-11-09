@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Cadastrar - Rede Social{% endblock %}
+
+{% block content %}
+    <h2>Cadastre-se</h2>
+    <form method="POST" action="{{ url_for('register') }}">
+        <div>
+            <label for="username">Nome de usuário</label>
+            <input type="text" id="username" name="username" required autocomplete="username">
+        </div>
+        <div>
+            <label for="password">Senha</label>
+            <input type="password" id="password" name="password" required autocomplete="new-password">
+        </div>
+        <button type="submit" style="background-color: #42b72a;">Criar Conta</button>
+    </form>
+    <div class="muted-link">
+        Já possui conta? <a href="{{ url_for('login') }}">Faça login</a>
+    </div>
+{% endblock %}
