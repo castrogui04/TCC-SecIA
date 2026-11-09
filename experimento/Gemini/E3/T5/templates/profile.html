@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Meu Perfil - Rede Social{% endblock %}
+
+{% block content %}
+<div class="card profile-card">
+    <h2>Meu Perfil</h2>
+    <div class="profile-avatar-wrapper">
+        <img src="{{ url_for('static', filename='uploads/' + user['avatar']) }}" alt="Foto de perfil de {{ user['username'] }}" class="profile-large-avatar">
+    </div>
+    <h3 style="font-size: 1.2rem; color: #1c1e21; margin-bottom: 4px;">@{{ user['username'] }}</h3>
+    <p class="profile-hint">Envie uma imagem do seu computador para utilizar ou substituir sua foto de perfil atual.</p>
+
+    <form method="POST" action="{{ url_for('profile') }}" enctype="multipart/form-data" style="margin-top: 24px; text-align: left;">
+        <div class="form-group">
+            <label for="avatar">Selecionar nova foto de perfil:</label>
+            <input type="file" id="avatar" name="avatar" accept="image/*" required>
+            <small style="color: #65676b; font-size: 0.8rem; display: block; margin-top: 4px;">Formatos aceitos: PNG, JPG, JPEG, GIF e WEBP (máx. 5MB).</small>
+        </div>
+        <div class="actions">
+            <button type="submit" class="btn-primary" style="border: none; cursor: pointer;">Salvar Foto de Perfil</button>
+            <a href="{{ url_for('index') }}" class="btn-secondary">Voltar ao Feed</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

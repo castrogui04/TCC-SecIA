@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}Resultados da Busca - Rede Social{% endblock %}
+
+{% block content %}
+<div class="search-header-card">
+    <h2>Resultados da Busca</h2>
+    {% if query %}
+        <p>Exibindo resultados para: <strong>"{{ query }}"</strong></p>
+    {% else %}
+        <p>Nenhum termo de busca informado.</p>
+    {% endif %}
+
+    <form action="{{ url_for('search') }}" method="GET" class="search-page-form">
+        <input type="text" name="q" placeholder="Buscar novamente..." value="{{ query }}" required>
+        <button type="submit" class="btn-primary" style="border:none; cursor:pointer;">Pesquisar</button>
+    </form>
+</div>
+
+<!-- Seção: Usuários Encontrados -->
+<div class="search-section-title">
+    <span>Usuários Encontrados</span>
+    <span class="badge-count">{{ matched_users|length }}</span>
+</div>
+
+{% if matched_users %}
+    <div class="users-grid">
+        {% for u in matched_users %}
+            <div class="user-card">
+                <img src="{{ url_for('static', filename='uploads/' + (u['avatar'] or 'default_avatar.svg')) }}" alt="Foto de {{ u['username'] }}" class="user-card-avatar">
+                <div class="user-card-info">
+                    <span class="user-card-name">@{{ u['username'] }}</span>
+                    <span class="user-card-date">Desde {{ u['created_at'] }}</span>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state">
+        <p>Nenhum usuário encontrado correspondente ao termo "{{ query }}".</p>
+    </div>
+{% endif %}
+
+<!-- Seção: Postagens Encontradas -->
+<div class="search-section-title">
+    <span>Postagens Encontradas</span>
+    <span class="badge-count">{{ matched_posts|length }}</span>
+</div>
+
+{% if matched_posts %}
+    {% for post in matched_posts %}
+        <div class="post-card">
+            <div class="post-header">
+                <div class="post-meta-container">
+                    <img src="{{ url_for('static', filename='uploads/' + post['author_avatar']) }}" alt="Foto de {{ post['author_name'] }}" class="post-avatar">
+                    <div class="post-meta">
+                        <span class="post-author">@{{ post['author_name'] }}</span>
+                        <span class="post-date">
+                            Publicado em {{ post['created_at'] }}
+                            {% if post['updated_at'] and post['updated_at'] != post['created_at'] %}
+                                <em>(editado)</em>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+
+                {% if user and user['id'] == post['author_id'] %}
+                    <div class="post-controls">
+                        <a href="{{ url_for('edit_post', post_id=post['id']) }}" class="btn-link-action">Editar</a>
+                        <form method="POST" action="{{ url_for('delete_post', post_id=post['id']) }}" onsubmit="return confirm('Deseja realmente excluir esta postagem?');" style="display:inline;">
+                            <button type="submit" class="btn-link-danger">Excluir</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="post-content">{{ post['content'] }}</div>
+
+            <!-- Seção de Comentários do Post Encontrado -->
+            <div class="comments-section">
+                <div class="comments-title">
+                    Comentários ({{ post['comments']|length }})
+                </div>
+
+                {% if post['comments'] %}
+                    <div class="comments-list">
+                        {% for comment in post['comments'] %}
+                            <div class="comment-item">
+                                <img src="{{ url_for('static', filename='uploads/' + comment['author_avatar']) }}" alt="Foto de {{ comment['author_name'] }}" class="comment-avatar">
+                                <div class="comment-body">
+                                    <div class="comment-header">
+                                        <span class="comment-author">@{{ comment['author_name'] }}</span>
+                                        <span class="comment-date">{{ comment['created_at'] }}</span>
+                                    </div>
+                                    <div class="comment-content">{{ comment['content'] }}</div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="no-comments">Nenhum comentário nesta postagem ainda.</p>
+                {% endif %}
+
+                {% if user %}
+                    <form method="POST" action="{{ url_for('add_comment', post_id=post['id']) }}" class="comment-form">
+                        <textarea name="content" class="comment-input" placeholder="Escreva um comentário..." rows="1" required></textarea>
+                        <button type="submit" class="btn-comment">Comentar</button>
+                    </form>
+                {% else %}
+                    <p class="comment-login-hint">
+                        <a href="{{ url_for('login') }}">Faça login</a> para comentar nesta postagem.
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="empty-state">
+        <p>Nenhuma postagem encontrada correspondente ao termo "{{ query }}".</p>
+    </div>
+{% endif %}
+{% endblock %}
