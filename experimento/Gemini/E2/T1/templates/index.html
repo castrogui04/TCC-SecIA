@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Início - Rede Social{% endblock %}
+
+{% block content %}
+<div class="card">
+    {% if user %}
+        <h2>Página Inicial</h2>
+        <p>Você está autenticado como <strong>{{ user['username'] }}</strong> (ID: {{ user['id'] }}).</p>
+        <p style="margin-top: 1rem; color: #64748b;">A sua sessão está ativa no navegador.</p>
+        <div style="margin-top: 1.5rem;">
+            <a href="{{ url_for('logout') }}" class="btn btn-danger">Encerrar Sessão</a>
+        </div>
+    {% else %}
+        <h2>Bem-vindo à Rede Social</h2>
+        <p>Você não está autenticado no momento. Faça login ou crie uma conta para acessar a plataforma.</p>
+        <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem;">
+            <a href="{{ url_for('login') }}" class="btn">Entrar</a>
+            <a href="{{ url_for('register') }}" class="btn" style="background-color: #475569;">Criar Conta</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
